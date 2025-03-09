@@ -6,6 +6,13 @@
 docker build -t spacy-umls .
 ```
 
+```sh
+docker run -it \
+  -v $(pwd)/app:/app \
+  -v $(pwd)/secrets:/usr/secrets \
+  spacy-umls /bin/sh
+```
+
 
 ## OLD Attempts
 Challenging to get working without root privileges
