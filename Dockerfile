@@ -16,5 +16,11 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY ./app /app
 
+# make get_umls.py executable
+RUN chmod +x /app/get_umls.py
+
+# make the downloads directory
+RUN mkdir /usr/downloads
+
 # Run a command to keep the container running
 CMD ["tail", "-f", "/dev/null"]

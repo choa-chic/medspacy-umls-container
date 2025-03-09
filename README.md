@@ -2,17 +2,38 @@
 
 ## Using Dockerfile
 
+
+### Build Image
 ```sh
 docker build -t spacy-umls .
 ```
 
+### Start Conainer
+
+Detached mode
 ```sh
-docker run -it \
+docker run -d \
+  --replace \
+  --name spacy-umls \
   -v $(pwd)/app:/app \
   -v $(pwd)/secrets:/usr/secrets \
-  spacy-umls /bin/sh
+  -v $(pwd)/downloads:/usr/downloads \
+  spacy-umls
 ```
 
+### Access through CLI once running
+
+```sh
+docker exec -it spacy-umls /bin/sh
+```
+
+### Download UMLS Data with API Key
+
+Make sure you have a file named ./secrets/umls_key.txt, containing your NLM/UMLS API key.
+
+```sh
+docker exec -it spacy-umls './python get_umls.py'
+```
 
 ## OLD Attempts
 Challenging to get working without root privileges
