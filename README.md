@@ -1,4 +1,6 @@
-# Spacy environment
+# Medspacy with UMLS using Docker
+
+[![Publish Docker image](https://github.com/choa-chic/medspacy-umls-container/actions/workflows/publish.yml/badge.svg)](https://github.com/choa-chic/medspacy-umls-container/actions/workflows/publish.yml)
 
 ## Using Dockerfile
 
@@ -27,40 +29,46 @@ docker run -d \
 docker exec -it spacy-umls /bin/sh
 ```
 
-### Download UMLS Data with API Key
+## Download UMLS Data with API Key
 
-Make sure you have a file named ./secrets/umls_key.txt, containing your NLM/UMLS API key.
+Make sure you have a file named ./secrets/umls_key.txt, containing your NLM/UMLS API key. If you api key is valid, this will put the umls data in ./Downloads/
 
 ```sh
-docker exec -it spacy-umls './python get_umls.py'
+docker exec -it spacy-umls python get_umls.py
 ```
 
-## OLD Attempts
-Challenging to get working without root privileges
+## Extract the UMLS Files
+This is probably best done from outside the container (e.g. on the host).
+
+From the ./spacy directory (the root of the repository), run the following code. Note that this is a lot of data, so can take a while.
 
 ```sh
-python -m venv env
-source env/bin/activate
-python -m pip install --upgrade pip
+unzip  downloads/umlumls-2024AB-metathesaurus-full.zip
 ```
 
-For some dev servers, may need to change temporary storage location - can run this command or add to ~/.bashrc
+This should create a directory named "2024AB" (or whichever version you are using)
+
+## Create a QuickUMLS Installation
+
+[QuickUMLS Instructions on Github](https://github.com/Georgetown-IR-Lab/QuickUMLS)
+
+RUN this INSIDE the container!
+
+**Restart** the container with a volume mapped to the UMLS extraction directory.
+
 ```sh
-export TMPDIR=/data/tmp
-export PIP_CACHE_DIR=/data/tmp/pip_tmp
-export PYTHONUSERBASE=/data/home/<user>
+docker run -d \
+  --replace \
+  --name spacy-umls \
+  -v $(pwd)/app:/app \
+  -v $(pwd)/secrets:/usr/secrets \
+  -v $(pwd)/downloads:/usr/downloads \
+  -v $(pwd)/2024AB/META/:/app/UMLS \
+  spacy-umls
 ```
 
-can also try
 ```sh
-pip cache purge
-```
+makedir /app/QuickUMLS
 
-May need python-dev package or install from source to install quickumls.
-
-```sh
-pip install requests spacy medspacy 
-pip install plyvel #to get precompiled leveldb
-pip install unqlite
-pip install quickumls
+python -m quickumls.install /app/UMLS /app/QuickUMLS
 ```

@@ -2,4 +2,7 @@ env
 secrets
 app/*.RRF
 app/*.zip
+app/UMLS/**
+app/QuickUMLS/**
 downloads
+20**AB

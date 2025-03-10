@@ -8,9 +8,9 @@ with open("/usr/secrets/umls_key.txt", "r") as file:
 
 base_url = "https://uts-ws.nlm.nih.gov/download"
 files_to_download = [
-    "https://download.nlm.nih.gov/umls/kss/2024AB/umls-2024AB-mrconso.zip"
+    # "https://download.nlm.nih.gov/umls/kss/2024AB/umls-2024AB-mrconso.zip"
     # ,
-    # "https://download.nlm.nih.gov/umls/kss/2024AB/umls-2024AB-metathesaurus-full.zip"
+    "https://download.nlm.nih.gov/umls/kss/2024AB/umls-2024AB-metathesaurus-full.zip"
 ]
 
 for file_url in files_to_download:
